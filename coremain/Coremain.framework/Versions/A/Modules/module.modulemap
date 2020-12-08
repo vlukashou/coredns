@@ -1,0 +1,8 @@
+framework module "Coremain" {
+	header "ref.h"
+    header "Coremain.objc.h"
+    header "Universe.objc.h"
+    header "Coremain.h"
+
+    export *
+}

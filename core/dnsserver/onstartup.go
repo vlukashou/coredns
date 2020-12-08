@@ -1,17 +1,31 @@
 package dnsserver
 
-import "fmt"
+import (
+	"fmt"
+	"net"
+	"strings"
+)
 
 // startUpZones creates the text that we show when starting up:
 // grpc://example.com.:1055
 // example.com.:1053 on 127.0.0.1
 func startUpZones(protocol, addr string, zones map[string]*Config) string {
 	s := ""
-
+	var ip, port string
+	var err error
 	for zone := range zones {
 		// split addr into protocol, IP and Port
-		_, ip, port, err := SplitProtocolHostPort(addr)
-
+		parts := strings.Split(addr, "://")
+		switch len(parts) {
+		case 1:
+			ip, port, err = net.SplitHostPort(parts[0])
+		case 2:
+			ip, port, err = net.SplitHostPort(parts[1])
+		default:
+			ip = ""
+			port = ""
+			err = fmt.Errorf("provided value is not in an address format : %s", addr)
+		}
 		if err != nil {
 			// this should not happen, but we need to take care of it anyway
 			s += fmt.Sprintln(protocol + zone + ":" + addr)

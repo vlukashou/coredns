@@ -1,0 +1,8 @@
+framework module "Dnsserver" {
+	header "ref.h"
+    header "Dnsserver.objc.h"
+    header "Universe.objc.h"
+    header "Dnsserver.h"
+
+    export *
+}
