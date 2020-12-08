@@ -1,9 +1,7 @@
 package dnsserver
 
 import (
-	//"fmt"
 	"net"
-	//"strings"
 
 	"github.com/coredns/coredns/plugin"
 	"github.com/coredns/coredns/plugin/pkg/parse"
