@@ -17,7 +17,7 @@ import (
 // CoremainStarter runs coremain
 type CoremainStarter interface {
 	Run()
-	init()
+	Init()
 }
 
 // Starter runs service
@@ -39,12 +39,12 @@ func (s *Starter) Start() {
 
 // Init initializes service
 func (s *Starter) Init() {
-	s.coremainStarter.init()
+	s.coremainStarter.Init()
 }
 
-type Coremain struct {}
+type CoreDNS struct {}
 
-func (c *Coremain) init() {
+func (c *CoreDNS) Init() {
 	caddy.DefaultConfigFile = "Corefile"
 	caddy.Quiet = true // don't show init stuff from caddy
 	setVersion()
@@ -63,7 +63,7 @@ func (c *Coremain) init() {
 }
 
 // Run is CoreDNS's main() function.
-func (c *Coremain) Run() {
+func (c *CoreDNS) Run() {
 	caddy.TrapSignals()
 
 	// Reset flag.CommandLine to get rid of unwanted flags for instance from glog (used in kubernetes).

@@ -9,5 +9,8 @@ import (
 )
 
 func main() {
-	coremain.Run()
+	starterCoreDNS := coremain.NewStarter(&coremain.CoreDNS{})
+
+	starterCoreDNS.Init()
+	starterCoreDNS.Start()
 }
