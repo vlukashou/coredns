@@ -14,14 +14,57 @@ import (
 	"github.com/coredns/coredns/core/dnsserver"
 )
 
-type App struct {}
+// CoremainStarter runs coremain 
+type CoremainStarter interface { 
+	Run() 
+	Init() 
+} 
 
-func (c *App) Init(corefilePath string) {
+// NewCoreDns makes a new CoreDns 
+func NewCoreDns(corefilePath string) *CoreDns { 
+	return &CoreDns{ 
+		corefilePath: corefilePath, 
+	} 
+} 
+
+/*
+// Starter runs service 
+type Starter struct { 
+	coremainStarter CoremainStarter 
+} 
+	
+// NewStarter makes a new Starter 
+func NewStarter(coremainStarter CoremainStarter) *Starter { 
+	return &Starter{ 
+	coremainStarter: coremainStarter, 
+	} 
+} 
+
+// Start runs service 
+func (s *Starter) Start() { 
+	s.coremainStarter.Run() 
+} 
+
+// Init initializes service 
+func (s *Starter) Init() { 
+	s.coremainStarter.Init() 
+} 
+
+type CoreDnsCallback interface {
+	CoreDnsReady()
+}
+// */
+
+type CoreDns struct {
+	corefilePath string
+}
+
+func (c *CoreDns) Init() {
 	caddy.DefaultConfigFile = "Corefile"
 	caddy.Quiet = true // don't show init stuff from caddy
 	setVersion()
 
-	flag.StringVar(&conf, "conf", corefilePath, "Corefile to load (default \""+caddy.DefaultConfigFile+"\")")
+	flag.StringVar(&conf, "conf", c.corefilePath, "Corefile to load (default \""+caddy.DefaultConfigFile+"\")")
 	flag.BoolVar(&plugins, "plugins", false, "List installed plugins")
 	flag.StringVar(&caddy.PidFile, "pidfile", "", "Path to write pid file")
 	flag.BoolVar(&version, "version", false, "Show version")
@@ -35,7 +78,7 @@ func (c *App) Init(corefilePath string) {
 }
 
 // Run is CoreDNS's main() function.
-func (c *App) Run() {
+func (c *CoreDns) Run() {
 	caddy.TrapSignals()
 
 	// Reset flag.CommandLine to get rid of unwanted flags for instance from glog (used in kubernetes).
