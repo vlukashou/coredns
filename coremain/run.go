@@ -14,42 +14,14 @@ import (
 	"github.com/coredns/coredns/core/dnsserver"
 )
 
-// CoremainStarter runs coremain
-type CoremainStarter interface {
-	Run()
-	Init()
-}
+type App struct {}
 
-// Starter runs service
-type Starter struct {
-	coremainStarter CoremainStarter
-}
-
-// NewStarter makes a new Starter
-func NewStarter(coremainStarter CoremainStarter) *Starter {
-	return &Starter{
-		coremainStarter: coremainStarter,
-	}
-}
-
-// Start runs service
-func (s *Starter) Start() {
-	s.coremainStarter.Run()
-}
-
-// Init initializes service
-func (s *Starter) Init() {
-	s.coremainStarter.Init()
-}
-
-type CoreDNS struct {}
-
-func (c *CoreDNS) Init() {
+func (c *App) Init(corefilePath string) {
 	caddy.DefaultConfigFile = "Corefile"
 	caddy.Quiet = true // don't show init stuff from caddy
 	setVersion()
 
-	flag.StringVar(&conf, "conf", "corefile", "Corefile to load (default \""+caddy.DefaultConfigFile+"\")")
+	flag.StringVar(&conf, "conf", corefilePath, "Corefile to load (default \""+caddy.DefaultConfigFile+"\")")
 	flag.BoolVar(&plugins, "plugins", false, "List installed plugins")
 	flag.StringVar(&caddy.PidFile, "pidfile", "", "Path to write pid file")
 	flag.BoolVar(&version, "version", false, "Show version")
@@ -63,7 +35,7 @@ func (c *CoreDNS) Init() {
 }
 
 // Run is CoreDNS's main() function.
-func (c *CoreDNS) Run() {
+func (c *App) Run() {
 	caddy.TrapSignals()
 
 	// Reset flag.CommandLine to get rid of unwanted flags for instance from glog (used in kubernetes).
