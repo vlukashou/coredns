@@ -12,10 +12,6 @@ import (
 )
 
 func main() {
-	// starterCoreDNS := coremain.NewStarter(&coremain.CoreDNS{}) 
-	// starterCoreDNS.Init() 
-	// starterCoreDNS.Start() 
-	
 	coreDns := coremain.NewCoreDns("corefile")
 	// go func(){
 	// 	for {
