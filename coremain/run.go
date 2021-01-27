@@ -14,41 +14,43 @@ import (
 	"github.com/coredns/coredns/core/dnsserver"
 )
 
-// CoremainStarter runs coremain 
-type CoremainStarter interface { 
-	Run() 
-	Init() 
-} 
+// CoremainStarter runs coremain
+type CoremainStarter interface {
+	Run()
+	Init()
+	GetLog() string
+}
 
-// NewCoreDns makes a new CoreDns 
-func NewCoreDns(corefilePath string) *CoreDns { 
-	return &CoreDns{ 
-		corefilePath: corefilePath, 
-	} 
-} 
+// NewCoreDns makes a new CoreDns
+func NewCoreDns(corefilePath string) *CoreDns {
+	return &CoreDns{
+		corefilePath: corefilePath,
+		status:       "СoreDns was defined",
+	}
+}
 
 /*
-// Starter runs service 
-type Starter struct { 
-	coremainStarter CoremainStarter 
-} 
-	
-// NewStarter makes a new Starter 
-func NewStarter(coremainStarter CoremainStarter) *Starter { 
-	return &Starter{ 
-	coremainStarter: coremainStarter, 
-	} 
-} 
+// Starter runs service
+type Starter struct {
+	coremainStarter CoremainStarter
+}
 
-// Start runs service 
-func (s *Starter) Start() { 
-	s.coremainStarter.Run() 
-} 
+// NewStarter makes a new Starter
+func NewStarter(coremainStarter CoremainStarter) *Starter {
+	return &Starter{
+	coremainStarter: coremainStarter,
+	}
+}
 
-// Init initializes service 
-func (s *Starter) Init() { 
-	s.coremainStarter.Init() 
-} 
+// Start runs service
+func (s *Starter) Start() {
+	s.coremainStarter.Run()
+}
+
+// Init initializes service
+func (s *Starter) Init() {
+	s.coremainStarter.Init()
+}
 
 type CoreDnsCallback interface {
 	CoreDnsReady()
@@ -57,6 +59,7 @@ type CoreDnsCallback interface {
 
 type CoreDns struct {
 	corefilePath string
+	status       string
 }
 
 func (c *CoreDns) Init() {
@@ -75,6 +78,7 @@ func (c *CoreDns) Init() {
 
 	caddy.AppName = coreName
 	caddy.AppVersion = CoreVersion
+	c.status = "Init of the СoreDns finished"
 }
 
 // Run is CoreDNS's main() function.
@@ -98,6 +102,7 @@ func (c *CoreDns) Run() {
 	flag.Parse()
 
 	if len(flag.Args()) > 0 {
+		c.status = "Error: extra command line arguments"
 		mustLogFatal(fmt.Errorf("extra command line arguments: %s", flag.Args()))
 	}
 
@@ -116,21 +121,28 @@ func (c *CoreDns) Run() {
 	// Get Corefile input
 	corefile, err := caddy.LoadCaddyfile(serverType)
 	if err != nil {
+		c.status = "Error: СoreDns didn't get Corefile"
 		mustLogFatal(err)
 	}
 
 	// Start your engines
 	instance, err := caddy.Start(corefile)
 	if err != nil {
+		c.status = "Error: Engines didn't started"
 		mustLogFatal(err)
 	}
 
 	if !dnsserver.Quiet {
 		showVersion()
 	}
+	c.status = "СoreDns started"
 
 	// Twiddle your thumbs
 	instance.Wait()
+}
+
+func (c *CoreDns) GetLog() string {
+	return c.status
 }
 
 // mustLogFatal wraps log.Fatal() in a way that ensures the
