@@ -23,15 +23,15 @@ type CoremainStarter interface {
 }
 
 // NewCoreDns makes a new CoreDns
-func NewCoreDns(corefilePath string) *CoreDns {
+func NewCoreDns() *CoreDns {
 	return &CoreDns{
-		corefilePath: corefilePath,
+		// corefilePath: corefilePath,
 		status:       "СoreDns was defined",
 	}
 }
 
 type CoreDns struct {
-	corefilePath string
+	// corefilePath string
 	status       string
 }
 
@@ -40,7 +40,7 @@ func (c *CoreDns) Init() {
 	caddy.Quiet = true // don't show init stuff from caddy
 	setVersion()
 
-	flag.StringVar(&conf, "conf", c.corefilePath, "Corefile to load (default \""+caddy.DefaultConfigFile+"\")")
+	// flag.StringVar(&conf, "conf", c.corefilePath, "Corefile to load (default \""+caddy.DefaultConfigFile+"\")")
 	flag.BoolVar(&plugins, "plugins", false, "List installed plugins")
 	flag.StringVar(&caddy.PidFile, "pidfile", "", "Path to write pid file")
 	flag.BoolVar(&version, "version", false, "Show version")
@@ -125,6 +125,8 @@ func (c *CoreDns) Run() {
 	// 	c.status = "Error: СoreDns didn't get Corefile"
 	// 	mustLogFatal(err)
 	// }
+	// contentProtofile := ".:1253 {\n\t\tforward . 8.8.8.8\n\t\terrors\n\t\tdebug\n\t\tlog\n}"
+	// fmt.Printf("contentProtofile: %v\n", []byte(contentProtofile))
 
 	hardCorefile := caddy.CaddyfileInput { 
 		Filepath: "corefile",

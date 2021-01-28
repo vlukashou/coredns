@@ -12,7 +12,8 @@ import (
 )
 
 func main() {
-	coreDns := coremain.NewCoreDns("corefile")
+	// coreDns := coremain.NewCoreDns("corefile")
+	coreDns := coremain.NewCoreDns()
 	// go func(){
 	// 	for {
 	// 		fmt.Printf("%s\n",coreDns.GetLog())
