@@ -57,12 +57,12 @@ func (c *CoreDns) Init() {
 // Run is CoreDNS's main() function.
 func (c *CoreDns) Run() {
 	c.status = "Run started"
-	time.Sleep(3*time.Second)
+	time.Sleep(2*time.Second)
 
 	caddy.TrapSignals()
 
 	c.status = "TrapSignals finished"
-	time.Sleep(3*time.Second)
+	time.Sleep(2*time.Second)
 
 	// Reset flag.CommandLine to get rid of unwanted flags for instance from glog (used in kubernetes).
 	// And read the ones we want to keep.
@@ -74,7 +74,7 @@ func (c *CoreDns) Run() {
 	})
 
 	c.status = "Reseted the flag.CommandLine"
-	time.Sleep(3*time.Second)
+	time.Sleep(2*time.Second)
 
 	flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
 	for _, f := range flagsToKeep {
@@ -82,12 +82,12 @@ func (c *CoreDns) Run() {
 	}
 
 	c.status = "NewFlagSet finished"
-	time.Sleep(3*time.Second)
+	time.Sleep(2*time.Second)
 
 	flag.Parse()
 
 	c.status = "Flags parsing finished"
-	time.Sleep(3*time.Second)
+	time.Sleep(2*time.Second)
 
 	if len(flag.Args()) > 0 {
 		c.status = "Error: extra command line arguments"
@@ -95,13 +95,13 @@ func (c *CoreDns) Run() {
 	}
 
 	c.status = "Checking lenght args finished"
-	time.Sleep(3*time.Second)
+	time.Sleep(2*time.Second)
 
 	log.SetOutput(os.Stdout)
 	log.SetFlags(0) // Set to 0 because we're doing our own time, with timezone
 
 	c.status = "Setting flag to 0 finished"
-	time.Sleep(3*time.Second)
+	time.Sleep(2*time.Second)
 
 	if version {
 		showVersion()
@@ -109,7 +109,7 @@ func (c *CoreDns) Run() {
 	}
 
 	c.status = "Show version finished"
-	time.Sleep(3*time.Second)
+	time.Sleep(2*time.Second)
 
 	if plugins {
 		fmt.Println(caddy.DescribePlugins())
@@ -117,27 +117,35 @@ func (c *CoreDns) Run() {
 	}
 
 	c.status = "Show plugins finished"
-	time.Sleep(3*time.Second)
+	time.Sleep(2*time.Second)
 
 	// Get Corefile input
-	corefile, err := caddy.LoadCaddyfile(serverType)
-	if err != nil {
-		c.status = "Error: СoreDns didn't get Corefile"
-		mustLogFatal(err)
+	// corefile, err := caddy.LoadCaddyfile(serverType)
+	// if err != nil {
+	// 	c.status = "Error: СoreDns didn't get Corefile"
+	// 	mustLogFatal(err)
+	// }
+
+	hardCorefile := caddy.CaddyfileInput { 
+		Filepath: "corefile",
+		Contents: []byte{46, 58, 49, 50, 53, 51, 32, 123, 10, 32, 32, 32, 32, 102, 111, 114, 119, 97, 114, 100, 32, 46,
+			32, 56, 46, 56, 46, 56, 46, 56, 10, 10, 32, 32, 32, 32, 101, 114, 114, 111, 114, 115, 10, 32, 32, 32, 32,
+			100, 101, 98, 117, 103, 10, 32, 32, 32, 32, 108, 111, 103, 10, 125, 10},
+		ServerTypeName: "dns",
 	}
 
 	c.status = "СoreDns got Corefile"
-	time.Sleep(3*time.Second)
+	time.Sleep(2*time.Second)
 
 	// Start your engines
-	instance, err := caddy.Start(corefile)
+	instance, err := caddy.Start(hardCorefile)
 	if err != nil {
 		c.status = "Error: Engines didn't started"
 		mustLogFatal(err)
 	}
 
 	c.status = "Engines started"
-	time.Sleep(3*time.Second)
+	time.Sleep(1*time.Second)
 	
 	if !dnsserver.Quiet {
 		showVersion()

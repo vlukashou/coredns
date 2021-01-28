@@ -16,6 +16,7 @@ func main() {
 	// go func(){
 	// 	for {
 	// 		fmt.Printf("%s\n",coreDns.GetLog())
+	// 		if coreDns.GetLog() == "СoreDns started" { break }
 	// 		time.Sleep(1*time.Second)	
 	// 	}
 	// }()
