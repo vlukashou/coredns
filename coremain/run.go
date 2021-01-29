@@ -36,7 +36,7 @@ type CoreDns struct {
 }
 
 func (c *CoreDns) Init() {
-	caddy.DefaultConfigFile = "Corefile"
+	caddy.DefaultConfigFile = "corefile"
 	caddy.Quiet = true // don't show init stuff from caddy
 	setVersion()
 
@@ -125,14 +125,20 @@ func (c *CoreDns) Run() {
 	// 	c.status = "Error: СoreDns didn't get Corefile"
 	// 	mustLogFatal(err)
 	// }
+	// fmt.Printf("corefile.Path(): %s\n", corefile.Path())
+	// fmt.Printf("corefile.ServerType(): %s\n", corefile.ServerType())
+	// fmt.Printf("corefile.Body(): %v\n", corefile.Body())
 	// contentProtofile := ".:1253 {\n\t\tforward . 8.8.8.8\n\t\terrors\n\t\tdebug\n\t\tlog\n}"
 	// fmt.Printf("contentProtofile: %v\n", []byte(contentProtofile))
 
 	hardCorefile := caddy.CaddyfileInput { 
 		Filepath: "corefile",
+		// Contents: []byte{46, 58, 49, 50, 53, 51, 32, 123, 10, 32, 32, 32, 32, 102, 111, 114, 119, 97, 114, 100, 32, 46,
+		// 	32, 56, 46, 56, 46, 56, 46, 56, 10, 10, 32, 32, 32, 32, 101, 114, 114, 111, 114, 115, 10, 32, 32, 32, 32,
+		// 	100, 101, 98, 117, 103, 10, 32, 32, 32, 32, 108, 111, 103, 10, 125, 10},
 		Contents: []byte{46, 58, 49, 50, 53, 51, 32, 123, 10, 32, 32, 32, 32, 102, 111, 114, 119, 97, 114, 100, 32, 46,
 			32, 56, 46, 56, 46, 56, 46, 56, 10, 10, 32, 32, 32, 32, 101, 114, 114, 111, 114, 115, 10, 32, 32, 32, 32,
-			100, 101, 98, 117, 103, 10, 32, 32, 32, 32, 108, 111, 103, 10, 125, 10},
+			108, 111, 103, 10, 125, 10},
 		ServerTypeName: "dns",
 	}
 
