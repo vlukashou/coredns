@@ -18,11 +18,11 @@ func main() {
 	// 	for {
 	// 		fmt.Printf("%s\n",coreDns.GetLog())
 	// 		if coreDns.GetLog() == "СoreDns started" { break }
-	// 		time.Sleep(1*time.Second)	
+	// 		time.Sleep(1*time.Second)
 	// 	}
 	// }()
 	coreDns.Init()
-	status := coreDns.GetLog() 
-	fmt.Printf("%s\n",status)
+	status := coreDns.GetLog()
+	fmt.Printf("%s\n", status)
 	coreDns.Run()
 }

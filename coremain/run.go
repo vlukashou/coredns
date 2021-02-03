@@ -15,24 +15,9 @@ import (
 	"github.com/coredns/coredns/core/dnsserver"
 )
 
-// CoremainStarter runs coremain
-type CoremainStarter interface {
-	Run()
-	Init()
-	GetLog() string
-}
-
-// NewCoreDns makes a new CoreDns
-func NewCoreDns() *CoreDns {
-	return &CoreDns{
-		// corefilePath: corefilePath,
-		status:       "СoreDns was defined",
-	}
-}
-
 type CoreDns struct {
 	// corefilePath string
-	status       string
+	status string
 }
 
 func (c *CoreDns) Init() {
@@ -41,7 +26,7 @@ func (c *CoreDns) Init() {
 	setVersion()
 
 	// flag.StringVar(&conf, "conf", c.corefilePath, "Corefile to load (default \""+caddy.DefaultConfigFile+"\")")
-	flag.BoolVar(&plugins, "plugins", true, "List installed plugins")
+	flag.BoolVar(&plugins, "plugins", false, "List installed plugins")
 	flag.StringVar(&caddy.PidFile, "pidfile", "", "Path to write pid file")
 	flag.BoolVar(&version, "version", false, "Show version")
 	flag.BoolVar(&dnsserver.Quiet, "quiet", false, "Quiet mode (no initialization output)")
@@ -56,13 +41,8 @@ func (c *CoreDns) Init() {
 
 // Run is CoreDNS's main() function.
 func (c *CoreDns) Run() {
-	c.status = "Run started"
-	// time.Sleep(2*time.Second)
 
 	caddy.TrapSignals()
-
-	c.status = "TrapSignals finished"
-	// time.Sleep(2*time.Second)
 
 	// Reset flag.CommandLine to get rid of unwanted flags for instance from glog (used in kubernetes).
 	// And read the ones we want to keep.
@@ -73,90 +53,51 @@ func (c *CoreDns) Run() {
 		flagsToKeep = append(flagsToKeep, f)
 	})
 
-	c.status = "Reseted the flag.CommandLine"
-	// time.Sleep(2*time.Second)
-
 	flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
 	for _, f := range flagsToKeep {
 		flag.Var(f.Value, f.Name, f.Usage)
 	}
 
-	c.status = "NewFlagSet finished"
-	// time.Sleep(2*time.Second)
-
 	flag.Parse()
-
-	c.status = "Flags parsing finished"
-	// time.Sleep(2*time.Second)
 
 	if len(flag.Args()) > 0 {
 		c.status = "Error: extra command line arguments"
 		mustLogFatal(fmt.Errorf("extra command line arguments: %s", flag.Args()))
 	}
 
-	c.status = "Checking lenght args finished"
-	// time.Sleep(2*time.Second)
-
 	log.SetOutput(os.Stdout)
 	log.SetFlags(0) // Set to 0 because we're doing our own time, with timezone
-
-	c.status = "Setting flag to 0 finished"
-	// time.Sleep(2*time.Second)
 
 	if version {
 		showVersion()
 		os.Exit(0)
 	}
 
-	c.status = "Show version finished"
-	// time.Sleep(2*time.Second)
-
 	if plugins {
 		fmt.Println(caddy.DescribePlugins())
 		c.status = fmt.Sprintf("caddy.DescribePlugins:\n%s\n", caddy.DescribePlugins())
-		time.Sleep(10*time.Second)
+		time.Sleep(10 * time.Second)
 		os.Exit(0)
 	}
 
-	c.status = "Show plugins finished"
-	// time.Sleep(2*time.Second)
-
-	// Get Corefile input
-	// corefile, err := caddy.LoadCaddyfile(serverType)
-	// if err != nil {
-	// 	c.status = "Error: СoreDns didn't get Corefile"
-	// 	mustLogFatal(err)
-	// }
-	// fmt.Printf("corefile.Path(): %s\n", corefile.Path())
-	// fmt.Printf("corefile.ServerType(): %s\n", corefile.ServerType())
-	// fmt.Printf("corefile.Body(): %v\n", corefile.Body())
-	// contentProtofile := ".:1253 {\n\t\tforward . 8.8.8.8\n\t\terrors\n\t\tdebug\n\t\tlog\n}"
-	// fmt.Printf("contentProtofile: %v\n", []byte(contentProtofile))
-
-	hardCorefile := caddy.CaddyfileInput { 
-		Filepath: "corefile",
-		// Contents: []byte{46, 58, 49, 50, 53, 51, 32, 123, 10, 32, 32, 32, 32, 102, 111, 114, 119, 97, 114, 100, 32, 46,
-		// 	32, 56, 46, 56, 46, 56, 46, 56, 10, 10, 32, 32, 32, 32, 101, 114, 114, 111, 114, 115, 10, 32, 32, 32, 32,
-		// 	100, 101, 98, 117, 103, 10, 32, 32, 32, 32, 108, 111, 103, 10, 125, 10},
-		Contents: []byte{46, 58, 49, 50, 53, 51, 32, 123, 10, 32, 32, 32, 32, 102, 111, 114, 119, 97, 114, 100, 32, 46,
-			32, 56, 46, 56, 46, 56, 46, 56, 10, 125, 10},
+	hardCorefile := caddy.CaddyfileInput{
+		Filepath:       "corefile",
+		Contents:       []byte(`.:1253 { forward . 8.8.8.8; errors; debug; log; }`),
 		ServerTypeName: "dns",
 	}
-
-	c.status = "СoreDns got Corefile"
-	// time.Sleep(2*time.Second)
 
 	// Start your engines
 	instance, err := caddy.Start(hardCorefile)
 	if err != nil {
 		c.status = fmt.Sprintf("caddy.Start failed with error: %v", err)
-		time.Sleep(10*time.Second)
+		time.Sleep(10 * time.Second)
 		mustLogFatal(err)
 	}
 
+	c.status = fmt.Sprintf("caddy.DescribePlugins:\n%s\n", caddy.DescribePlugins())
+
 	c.status = "Engines started"
-	// time.Sleep(1*time.Second)
-	
+
 	if !dnsserver.Quiet {
 		showVersion()
 	}
