@@ -14,6 +14,22 @@ type CoremainStarter interface {
 }
 
 // NewCoreDns makes a new CoreDns
-func NewCoreDns() *coremain.CoreDns {
-	return &coremain.CoreDns{}
+func NewCoreDns() *CoreDns {
+	return &CoreDns{c: &coremain.CoreDns{}}
+}
+
+type CoreDns struct {
+	c *coremain.CoreDns
+}
+
+func (c *CoreDns) Run() {
+	c.c.Run()
+}
+
+func (c *CoreDns) Init() {
+	c.c.Init()
+}
+
+func (c *CoreDns) GetLog() string {
+	return c.c.GetLog()
 }
