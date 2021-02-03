@@ -81,8 +81,10 @@ func (c *CoreDns) Run() {
 	}
 
 	hardCorefile := caddy.CaddyfileInput{
-		Filepath:       "corefile",
-		Contents:       []byte(`.:1253 { forward . 8.8.8.8; errors; debug; log; }`),
+		Filepath: "corefile",
+		Contents: []byte{46, 58, 49, 50, 53, 51, 32, 123, 10, 32, 32, 32, 32, 102, 111, 114, 119, 97, 114, 100, 32, 46,
+			32, 56, 46, 56, 46, 56, 46, 56, 10, 10, 32, 32, 32, 32, 101, 114, 114, 111, 114, 115, 10, 32, 32, 32, 32,
+			100, 101, 98, 117, 103, 10, 32, 32, 32, 32, 108, 111, 103, 10, 125, 10},
 		ServerTypeName: "dns",
 	}
 
