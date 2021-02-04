@@ -27,6 +27,7 @@ func (c *CoreDns) Run() {
 }
 
 func (c *CoreDns) Init() {
+	c.c = &coremain.CoreDns{}
 	c.c.Init()
 }
 
