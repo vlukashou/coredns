@@ -26,7 +26,7 @@ func (c *CoreDns) Init() {
 	setVersion()
 
 	// flag.StringVar(&conf, "conf", c.corefilePath, "Corefile to load (default \""+caddy.DefaultConfigFile+"\")")
-	flag.BoolVar(&plugins, "plugins", false, "List installed plugins")
+	flag.BoolVar(&plugins, "plugins", true, "List installed plugins")
 	flag.StringVar(&caddy.PidFile, "pidfile", "", "Path to write pid file")
 	flag.BoolVar(&version, "version", false, "Show version")
 	flag.BoolVar(&dnsserver.Quiet, "quiet", false, "Quiet mode (no initialization output)")
