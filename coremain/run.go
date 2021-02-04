@@ -76,8 +76,6 @@ func (c *CoreDns) Run() {
 	if plugins {
 		fmt.Println(caddy.DescribePlugins())
 		c.status = fmt.Sprintf("caddy.DescribePlugins:\n%s\n", caddy.DescribePlugins())
-		time.Sleep(10 * time.Second)
-		os.Exit(0)
 	}
 
 	hardCorefile := caddy.CaddyfileInput{
