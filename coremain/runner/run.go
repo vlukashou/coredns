@@ -6,13 +6,6 @@ import (
 	_ "github.com/coredns/coredns/core/plugin"
 )
 
-// CoremainStarter runs coremain
-type CoremainStarter interface {
-	Run()
-	Init()
-	GetLog() string
-}
-
 // NewCoreDns makes a new CoreDns
 func NewCoreDns() *CoreDns {
 	return &CoreDns{c: &coremain.CoreDns{}}
