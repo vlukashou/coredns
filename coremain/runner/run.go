@@ -3,7 +3,7 @@ package runner
 import (
 	"github.com/coredns/coredns/coremain"
 
-	_ "github.com/coredns/coredns/core/plugin"
+	_ "github.com/coredns/coredns/plugin/forward"
 )
 
 // NewCoreDns makes a new CoreDns
