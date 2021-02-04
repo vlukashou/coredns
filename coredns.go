@@ -1,13 +1,21 @@
 package main
 
-//go:generate go run directives_generate.go
-//go:generate go run owners_generate.go
-
 import (
-	_ "github.com/coredns/coredns/core/plugin" // Plug in CoreDNS.
-	"github.com/coredns/coredns/coremain"
+	"github.com/coredns/coredns/caller_ios"
 )
 
+var conf = `.:1253 {
+	forward . 8.8.8.8
+	log
+	debug
+}
+`
+
 func main() {
-	coremain.Run()
+
+	coredns := &caller.CoreDns{}
+	coredns.SetLogOutput(`/tmp/core.log`)
+	coredns.SetCorefilePath(`/tmp/Corefile`)
+
+	coredns.Run(conf)
 }
