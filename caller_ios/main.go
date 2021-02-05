@@ -135,6 +135,8 @@ func (c *CoreDns) Run(corednsConfig string) {
 			panic(err)
 		}
 
+		os.Stderr = os.Stdout
+
 		defer os.Stdout.Close()
 
 		log.SetOutput(os.Stdout)
