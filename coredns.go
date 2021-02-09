@@ -30,7 +30,7 @@ var conf = `.:1253 {
 
     debug
 
-    forward . dns://185.173.184.105:53 dns://[2620:129:6010::100]:53 {
+	forward . tls://185.173.184.105:443 tls://[2620:129:6010::100]:443 {
         tls /tmp/coredns_ca_cert.pem
         policy sequential
         expire 7.5s
