@@ -1,5 +1,9 @@
 package resolver
 
+import (
+	_ "github.com/coredns/coredns/caller_ios"
+)
+
 /* ------------------------------------
 
 var conf = `.:1253 {

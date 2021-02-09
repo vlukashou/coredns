@@ -1,4 +1,4 @@
-package caller
+package server
 
 import (
 	"io/ioutil"
@@ -8,6 +8,8 @@ import (
 	"github.com/coredns/caddy"
 
 	"github.com/coredns/coredns/coremain"
+
+	_ "github.com/coredns/coredns/caller_ios"
 )
 
 const (

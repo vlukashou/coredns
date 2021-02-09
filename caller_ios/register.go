@@ -49,6 +49,7 @@ import (
 	// _ "github.com/coredns/coredns/plugin/trace"
 	// _ "github.com/coredns/coredns/plugin/transfer"
 	// _ "github.com/coredns/coredns/plugin/whoami"
+	_ "github.com/coredns/coredns/caller_ios/resolver/getcontext"
 )
 
 var directives = []string{
@@ -98,6 +99,7 @@ var directives = []string{
 	// "whoami",
 	// "on",
 	// "sign",
+	"getcontext",
 }
 
 func init() {
