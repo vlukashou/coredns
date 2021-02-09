@@ -8,12 +8,12 @@ import (
 
 func init() {
 
-	caddy.RegisterPlugin("getcontext", caddy.Plugin{
+	caddy.RegisterPlugin("__getcontext", caddy.Plugin{
 		ServerType: "dns",
 		Action:     func(_ *caddy.Controller) error { return nil },
 	})
 
-	caddy.RegisterParsingCallback("dns", "getcontext", caddy.ParsingCallback(ParsingCallback))
+	caddy.RegisterParsingCallback("dns", "__getcontext", caddy.ParsingCallback(ParsingCallback))
 }
 
 var (

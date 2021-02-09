@@ -4,27 +4,6 @@ import (
 	_ "github.com/coredns/coredns/caller_ios"
 )
 
-/* ------------------------------------
-
-var conf = `.:1253 {
-	forward . 8.8.8.8
-	log
-	debug
-}
-`
-
-func main() {
-
-	r, err := resolver.New(conf, `/tmp/Corefile`)
-	if err != nil {
-		panic(err)
-	}
-	defer r.Shutdown()
-
-	fmt.Println(r.Query("tut.by.", dns.TypeA))
-}
-   ------------------------------------ */
-
 import (
 	"context"
 	"fmt"
@@ -42,7 +21,9 @@ const (
 	serverType = "dns"
 )
 
+// Server ...
 type Server interface {
+	// ServeDNS ...
 	ServeDNS(context.Context, dns.ResponseWriter, *dns.Msg)
 }
 
@@ -120,7 +101,7 @@ func New(c, p string) (*Resolver, error) {
 	)
 
 	// replace ending with getcontext stanza.
-	c = strings.Replace(c, "}", "\tgetcontext\n}", -1)
+	c = strings.Replace(c, "\n}", "\n    __getcontext\n}", -1)
 
 	if err = ioutil.WriteFile(p, []byte(c), 0644); err != nil {
 		return nil, err

@@ -33,13 +33,13 @@ import (
 	// _ "github.com/coredns/coredns/plugin/local"
 	_ "github.com/coredns/coredns/plugin/log"
 	// _ "github.com/coredns/coredns/plugin/loop"
-	// _ "github.com/coredns/coredns/plugin/metadata"
+	_ "github.com/coredns/coredns/plugin/metadata"
 	// _ "github.com/coredns/coredns/plugin/metrics"
 	// _ "github.com/coredns/coredns/plugin/nsid"
 	// _ "github.com/coredns/coredns/plugin/pprof"
 	// _ "github.com/coredns/coredns/plugin/ready"
 	// _ "github.com/coredns/coredns/plugin/reload"
-	// _ "github.com/coredns/coredns/plugin/rewrite"
+	_ "github.com/coredns/coredns/plugin/rewrite"
 	// _ "github.com/coredns/coredns/plugin/root"
 	// _ "github.com/coredns/coredns/plugin/route53"
 	// _ "github.com/coredns/coredns/plugin/secondary"
@@ -53,7 +53,7 @@ import (
 )
 
 var directives = []string{
-	// "metadata",
+	"metadata",
 	// "cancel",
 	// "tls",
 	// "reload",
@@ -77,7 +77,7 @@ var directives = []string{
 	// "chaos",
 	// "loadbalance",
 	// "cache",
-	// "rewrite",
+	"rewrite",
 	// "dnssec",
 	// "autopath",
 	// "template",
@@ -99,7 +99,7 @@ var directives = []string{
 	// "whoami",
 	// "on",
 	// "sign",
-	"getcontext",
+	"__getcontext",
 }
 
 func init() {

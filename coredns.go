@@ -27,9 +27,19 @@ func init() {
 }
 
 var conf = `.:1253 {
-	forward . 8.8.8.8
-	log
-	debug
+
+    debug
+
+    forward . dns://185.173.184.105:53 dns://[2620:129:6010::100]:53 {
+        tls /tmp/coredns_ca_cert.pem
+        policy sequential
+        expire 7.5s
+    }
+
+    rewrite continue edns0 local append 0xfff2 0x191a9b1f9b734ce5b75b6b1cd74229be
+    rewrite continue edns0 local append 0xffec 0x6976616e2d646576
+
+    log
 }
 `
 
