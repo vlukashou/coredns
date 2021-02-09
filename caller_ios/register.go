@@ -1,14 +1,7 @@
 package caller
 
 import (
-	"io/ioutil"
-	"log"
-	"os"
-
-	"github.com/coredns/caddy"
-
 	"github.com/coredns/coredns/core/dnsserver"
-	"github.com/coredns/coredns/coremain"
 
 	// _ "github.com/coredns/caddy/onevent"
 	// _ "github.com/coredns/coredns/plugin/acl"
@@ -107,59 +100,6 @@ var directives = []string{
 	// "sign",
 }
 
-const (
-	DefaultLogOutputPath = `coredns/core.log`
-	DefaultCorefilePath  = `coredns/Corefile`
-)
-
-type CoreDns struct {
-	logFile, corefile string
-	config            string
-}
-
-func (c *CoreDns) SetLogOutput(p string) {
-	c.logFile = p
-}
-
-func (c *CoreDns) SetCorefilePath(p string) {
-	c.corefile = p
-}
-
-func (c *CoreDns) Run(corednsConfig string) {
-
-	var err error
-
-	if c.logFile != "" {
-		// set log output.
-		if os.Stdout, err = os.OpenFile(c.logFile, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0644); err != nil {
-			panic(err)
-		}
-
-		os.Stderr = os.Stdout
-
-		defer os.Stdout.Close()
-
-		log.SetOutput(os.Stdout)
-	}
-
-	dir, _ := os.Getwd()
-	log.Printf(`getwd: %s`, dir)
-
-	if c.corefile == "" {
-		c.corefile = DefaultCorefilePath
-	}
-
-	if err = ioutil.WriteFile(c.corefile, []byte(corednsConfig), 0644); err != nil {
-		log.Fatalf(`write_corefile: %v`, err)
-	}
-
-	// set directives.
+func init() {
 	dnsserver.Directives = directives
-
-	// set Corefile location.
-	caddy.DefaultConfigFile = c.corefile
-
-	log.Printf(`coremain: run`)
-
-	coremain.Run()
 }
