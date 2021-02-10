@@ -90,6 +90,22 @@ func NewForConfigFile(p string) (*Resolver, error) {
 
 }
 
+func (r *Resolver) Setup(c, p string) error {
+
+	var (
+		ret *Resolver
+		err error
+	)
+
+	if ret, err = New(c, p); err != nil {
+		return err
+	}
+
+	*r = *ret
+
+	return nil
+}
+
 // New function returns the new resolver for the config string c and config file path p
 // (which is the path where Corefile will be written).
 func New(c, p string) (*Resolver, error) {
