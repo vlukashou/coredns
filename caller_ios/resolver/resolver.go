@@ -38,8 +38,8 @@ type Resolver struct {
 func (r *Resolver) Resolve(p []byte) ([]byte, error) {
 
 	var (
-		w *ResponseWriter = NewResponseWriter()
-		m *dns.Msg        = new(dns.Msg)
+		w = newResponseWriter()
+		m = new(dns.Msg)
 
 		err error
 	)
@@ -56,8 +56,8 @@ func (r *Resolver) Resolve(p []byte) ([]byte, error) {
 func (r *Resolver) Query(z string, t int) (*dns.Msg, error) {
 
 	var (
-		w *ResponseWriter = NewResponseWriter()
-		m *dns.Msg        = new(dns.Msg)
+		w = newResponseWriter()
+		m = new(dns.Msg)
 	)
 
 	m.SetQuestion(z, uint16(t))
