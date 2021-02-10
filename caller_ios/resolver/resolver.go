@@ -1,10 +1,6 @@
 package resolver
 
 import (
-	_ "github.com/coredns/coredns/caller_ios"
-)
-
-import (
 	"context"
 	"fmt"
 	"io/ioutil"
@@ -14,6 +10,7 @@ import (
 	"github.com/coredns/caddy"
 	"github.com/miekg/dns"
 
+	caller "github.com/coredns/coredns/caller_ios"
 	"github.com/coredns/coredns/caller_ios/resolver/getcontext"
 )
 
@@ -22,7 +19,7 @@ const (
 )
 
 // Server ...
-type Server interface {
+type server interface {
 	// ServeDNS ...
 	ServeDNS(context.Context, dns.ResponseWriter, *dns.Msg)
 }
@@ -30,8 +27,10 @@ type Server interface {
 // Resolver structure is a DNS resolver based on the CoreDNS/Caddy plugin system.
 // You can configure the resolve to be a blocking forwarding-proxy.
 type Resolver struct {
-	caddy.Server
+	*caller.Logger
+
 	inst *caddy.Instance
+	s    server
 }
 
 // Resolve function resolves the raw DNS datagram and returns the bytearray
@@ -49,21 +48,21 @@ func (r *Resolver) Resolve(p []byte) ([]byte, error) {
 		return nil, err
 	}
 
-	r.Server.(Server).ServeDNS(context.Background(), w, m)
+	r.s.ServeDNS(context.Background(), w, m)
 	return w.Pack()
 }
 
 // Query function resolves the DNS query of type t for the domainname z.
-func (r *Resolver) Query(z string, t uint16) (*dns.Msg, error) {
+func (r *Resolver) Query(z string, t int) (*dns.Msg, error) {
 
 	var (
 		w *ResponseWriter = NewResponseWriter()
 		m *dns.Msg        = new(dns.Msg)
 	)
 
-	m.SetQuestion(z, t)
+	m.SetQuestion(z, uint16(t))
 
-	r.Server.(Server).ServeDNS(context.Background(), w, m)
+	r.s.ServeDNS(context.Background(), w, m)
 	return w.Msg, nil
 }
 
@@ -116,6 +115,8 @@ func New(c, p string) (*Resolver, error) {
 		err error
 	)
 
+	r.Logger = &caller.Logger{}
+
 	// replace ending with getcontext stanza.
 	c = strings.Replace(c, "\n}", "\n    __getcontext\n}", -1)
 
@@ -150,7 +151,7 @@ func New(c, p string) (*Resolver, error) {
 		}
 	}
 
-	r.Server = servers[0]
+	r.s = servers[0].(server)
 
 	return r, nil
 }

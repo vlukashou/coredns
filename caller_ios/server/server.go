@@ -9,54 +9,24 @@ import (
 
 	"github.com/coredns/coredns/coremain"
 
-	_ "github.com/coredns/coredns/caller_ios"
+	caller "github.com/coredns/coredns/caller_ios"
 )
 
 const (
-	defaultLogOutputPath = `coredns/core.log`
-	defaultCorefilePath  = `coredns/Corefile`
+	defaultCorefilePath = `coredns/Corefile`
 )
 
 type Server struct {
+	*caller.Logger
 	conf, p string
-	log     *os.File
 }
 
-var (
-	oldStdout = os.Stdout
-	oldStderr = os.Stderr
-)
-
-// SetLogOutput function sets the ouput file for the logging instead of defined
-// stdout/stderr.
-func (c *Server) SetLogOutput(p string) {
-
-	var err error
-
-	if p == "" {
-		p = defaultLogOutputPath
-	}
-
-	if c.log, err = os.OpenFile(p, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0644); err != nil {
-		panic(err)
-	}
-
-	os.Stdout, os.Stderr = c.log, c.log
-	log.SetOutput(c.log)
-}
-
-// ResetLogOutput resets the output file for the log by reverting back stdout/stderr.
-func (c *Server) ResetLogOutput() {
-	if c.log != nil {
-		c.log.Close()
-	}
-	os.Stdout, os.Stderr = oldStdout, oldStderr
-	log.SetOutput(os.Stdout)
+func (c *Server) Setup() {
+	c.Logger = &caller.Logger{}
 }
 
 // Stop function stops the CoreDNS instance.
 func (c *Server) Stop() error {
-	c.ResetLogOutput()
 	return caddy.Stop()
 }
 

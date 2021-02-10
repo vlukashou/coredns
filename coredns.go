@@ -46,11 +46,15 @@ var conf = `.:1253 {
 func main() {
 
 	if z != "" {
-		r, err := resolver.New(conf, `/tmp/Corefile`)
-		if err != nil {
+
+		r := new(resolver.Resolver)
+
+		if err := r.Setup(conf, `/tmp/Corefile`); err != nil {
 			fmt.Println(err)
 			return
 		}
+
+		r.SetLogOutput(`/tmp/resolver.log`)
 
 		defer r.Shutdown()
 
@@ -58,19 +62,22 @@ func main() {
 			t = "A"
 		}
 
-		resp, err := r.Query(dns.Fqdn(z), dns.StringToType[strings.ToUpper(t)])
+		resp, err := r.Query(dns.Fqdn(z), int(dns.StringToType[strings.ToUpper(t)]))
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
 
-		fmt.Println("----------------")
 		fmt.Println(resp)
-		fmt.Println("----------------")
+
+		r.Printf("%v\n", resp)
 		return
 	}
 
 	srv := &server.Server{}
+
+	srv.Setup()
 	srv.SetLogOutput(`/tmp/core.log`)
+
 	srv.Run(conf, `/tmp/Corefile`)
 }
