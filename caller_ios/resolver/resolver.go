@@ -30,7 +30,7 @@ type Server interface {
 // Resolver structure is a DNS resolver based on the CoreDNS/Caddy plugin system.
 // You can configure the resolve to be a blocking forwarding-proxy.
 type Resolver struct {
-	Server
+	caddy.Server
 	inst *caddy.Instance
 }
 
@@ -49,7 +49,7 @@ func (r *Resolver) Resolve(p []byte) ([]byte, error) {
 		return nil, err
 	}
 
-	r.Server.ServeDNS(context.Background(), w, m)
+	r.Server.(Server).ServeDNS(context.Background(), w, m)
 	return w.Pack()
 }
 
@@ -63,7 +63,7 @@ func (r *Resolver) Query(z string, t uint16) (*dns.Msg, error) {
 
 	m.SetQuestion(z, t)
 
-	r.Server.ServeDNS(context.Background(), w, m)
+	r.Server.(Server).ServeDNS(context.Background(), w, m)
 	return w.Msg, nil
 }
 
@@ -134,7 +134,7 @@ func New(c, p string) (*Resolver, error) {
 		}
 	}
 
-	r.Server = servers[0].(Server)
+	r.Server = servers[0]
 
 	return r, nil
 }
