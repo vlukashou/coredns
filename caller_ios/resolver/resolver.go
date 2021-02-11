@@ -100,6 +100,10 @@ func (r *Resolver) Setup(c, p string) error {
 		return err
 	}
 
+	if r.inst != nil {
+		r.Shutdown()
+	}
+
 	*r = *ret
 
 	return nil

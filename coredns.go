@@ -36,8 +36,8 @@ var conf = `.:1253 {
         expire 7.5s
     }
 
-    rewrite continue edns0 local append 0xfff2 0x191a9b1f9b734ce5b75b6b1cd74229be
-    rewrite continue edns0 local append 0xffec 0x6976616e2d646576
+	rewrite continue edns0 local append 0xfff2 0x191a9b1f9b734ce5b75b6b1cd74229be
+	rewrite continue edns0 local append 0xffec 0x6976616e2d646576
 
     log
 }

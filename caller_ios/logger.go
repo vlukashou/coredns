@@ -23,6 +23,10 @@ func (c *Logger) Printf(frmt string, args ...interface{}) {
 	fmt.Fprintf(oldStdout, frmt, args...)
 }
 
+func (c *Logger) Log(msg string) {
+	log.Println(msg)
+}
+
 // SetLogOutput function sets the ouput file for the logging instead of defined
 // stdout/stderr.
 func (c *Logger) SetLogOutput(p string) {
